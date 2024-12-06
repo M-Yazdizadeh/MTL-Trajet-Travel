@@ -3,7 +3,6 @@ from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
-from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -294,38 +293,7 @@ print("Best Parameters:", xgb_clf.best_params_)
 print("Classification Report:")
 print(classification_report(y_test, xgb_y_pred, target_names=le_mode.classes_))
 
-# -----------------------------------
-# Step 7: Improved Neural Network (MLP)
-# -----------------------------------
-print("\n=== Neural Network (MLP) ===")
-# Define the hyperparameter grid for MLPClassifier
-mlp_params = {
-    'hidden_layer_sizes': [(128, 64), (128, 64, 32), (256, 128)],  # Sizes of hidden layers
-    'alpha': [0.0001, 0.001, 0.01],  # L2 penalty (regularization term) parameter
-    'learning_rate': ['constant', 'adaptive'],  # Learning rate schedule for weight updates
-    'max_iter': [400, 500]  # Maximum number of iterations
-}
 
-# Initialize MLPClassifier with a fixed random state for reproducibility
-mlp_clf = RandomizedSearchCV(
-    MLPClassifier(random_state=42),
-    mlp_params,
-    n_iter=10,  # Number of parameter settings that are sampled
-    cv=3,  # 3-fold cross-validation
-    random_state=42
-)
-
-# Fit the model on the scaled training data
-mlp_clf.fit(X_train_scaled, y_train)
-
-# Predict on the scaled test data
-mlp_y_pred = mlp_clf.predict(X_test_scaled)
-
-# Print the best hyperparameters found
-print("Best Parameters:", mlp_clf.best_params_)
-# Print the classification report
-print("Classification Report:")
-print(classification_report(y_test, mlp_y_pred, target_names=le_mode.classes_))
 
 
 
